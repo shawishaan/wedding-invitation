@@ -97,6 +97,44 @@
       text-decoration: none;
     }
 
+    .music-toggle {
+      position: fixed;
+      right: 1rem;
+      bottom: 1rem;
+      z-index: 9999;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      padding: .75rem 1rem;
+      border: 1px solid rgba(201, 162, 39, .8);
+      border-radius: 999px;
+      background: rgba(58, 14, 63, .82);
+      color: var(--ivory);
+      font-family: var(--font-heading);
+      font-size: .62rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      box-shadow: 0 16px 32px rgba(58, 14, 63, .25);
+      backdrop-filter: blur(6px);
+      transition: transform .25s ease, background .25s ease;
+    }
+
+    .music-toggle:hover,
+    .music-toggle:focus-visible {
+      transform: translateY(-2px);
+      background: rgba(92, 28, 83, .92);
+    }
+
+    .music-toggle.is-playing {
+      background: rgba(156, 122, 46, .9);
+    }
+
+    .music-toggle .icon {
+      font-size: 1rem;
+      line-height: 1;
+    }
+
     ::selection {
       background: var(--gold-light);
       color: var(--maroon-deepest);
@@ -1485,6 +1523,12 @@
 
 <body>
 
+  <button class="music-toggle" id="musicToggle" type="button" aria-label="Toggle background music" aria-pressed="false">
+    <span class="icon">♫</span>
+    <span>Music</span>
+  </button>
+  <audio id="weddingAudio" preload="auto" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+
   <!-- ============================================================
      1. OPENING / GANPATI JI CINEMATIC SECTION
      ============================================================ -->
@@ -2204,6 +2248,29 @@
 
       })();
 
+      (function musicToggle() {
+        var toggle = document.getElementById("musicToggle");
+        var audio = document.getElementById("weddingAudio");
+        if (!toggle || !audio) return;
+
+        toggle.addEventListener("click", async function () {
+          try {
+            if (audio.paused) {
+              await audio.play();
+              toggle.classList.add("is-playing");
+              toggle.setAttribute("aria-pressed", "true");
+              toggle.querySelector("span:last-child").textContent = "Pause";
+            } else {
+              audio.pause();
+              toggle.classList.remove("is-playing");
+              toggle.setAttribute("aria-pressed", "false");
+              toggle.querySelector("span:last-child").textContent = "Music";
+            }
+          } catch (err) {
+            toggle.querySelector("span:last-child").textContent = "Music";
+          }
+        });
+      })();
 
     })();
   </script>
